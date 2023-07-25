@@ -1,10 +1,11 @@
+const { error } = require('console');
 const User = require('../models/user');
 const {OK_STATUS, CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR} = require('../utils/errors')
 
 module.exports.createUser = (req, res) => {
   const {name, about, avatar} = req.body;
-  if (!name || !about || !avatar) {
-    return res.status(BAD_REQUEST).send({ message: '"Name", "about" и "avatar" - обязательные поля'});
+  if (error.name = 'ValidationError') {
+    return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя'});
   }
   User.create({name, about, avatar})
   .then(user => res.status(CREATED_STATUS).send({data: user}))
