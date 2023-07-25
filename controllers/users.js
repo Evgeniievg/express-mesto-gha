@@ -4,12 +4,15 @@ const {OK_STATUS, CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR} = requir
 
 module.exports.createUser = (req, res) => {
   const {name, about, avatar} = req.body;
-  if (error.name = 'ValidationError') {
-    return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя'});
-  }
   User.create({name, about, avatar})
   .then(user => res.status(CREATED_STATUS).send({data: user}))
-  .catch(err => res.status(SERVER_ERROR).send({ message: `Произошла ошибка при создании пользователя: ${err}` }));
+  .catch((err) => {
+    if(err.name === 'ValidationError') {
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя'});
+    } else {
+      return res.status(SERVER_ERROR).send({ message: `Произошла ошибка на сервере: ${err}`})
+    }
+  });
 }
 
 module.exports.getUserData = (req, res) => {
