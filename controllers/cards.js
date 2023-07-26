@@ -70,7 +70,12 @@ module.exports.dislikeCard = (req, res) => {
       }
       res.status(OK_STATUS).send({ data: card });
     })
-    .catch((err) =>
-      res.status(SERVER_ERROR).send({ message: `Ошибка при удалении лайка: ${err.message}` })
-    );
+    .catch((err) => {
+      if(err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: `Ошибка при добавлении лайка: ${err.message}`})
+      }
+    }
+    )
 };
