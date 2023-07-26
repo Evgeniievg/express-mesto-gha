@@ -31,9 +31,14 @@ module.exports.deleteCardById = (req, res) => {
       }
       res.status(OK_STATUS).send({ data: card });
     })
-    .catch((err) =>
-      res.status(SERVER_ERROR).send({ message: `Ошибка при удалении карточки: ${err.message}` })
-    );
+    .catch((err) => {
+      if(err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: `Ошибка удалении карточки: ${err.message}`})
+      }
+    }
+    )
 };
 
 module.exports.likeCard = (req, res) => {
