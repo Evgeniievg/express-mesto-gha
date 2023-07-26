@@ -13,5 +13,5 @@ module.exports = {
   CREATED_STATUS,
   BAD_REQUEST,
   NOT_FOUND,
-  SERVER_ERROR
-}
+  SERVER_ERROR,
+};
