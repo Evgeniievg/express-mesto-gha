@@ -65,5 +65,5 @@ module.exports.updateAvatar = (req, res) => {
       }
       return res.status(OK_STATUS).send({ data: user });
     })
-    .catch(res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении аватара' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении аватара' }));
 };
