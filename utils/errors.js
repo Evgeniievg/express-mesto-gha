@@ -1,5 +1,3 @@
-const OK_STATUS = 200;
-
 const CREATED_STATUS = 201;
 
 const BAD_REQUEST = 400;
@@ -9,7 +7,6 @@ const NOT_FOUND = 404;
 const SERVER_ERROR = 500;
 
 module.exports = {
-  OK_STATUS,
   CREATED_STATUS,
   BAD_REQUEST,
   NOT_FOUND,

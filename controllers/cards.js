@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const {
-  OK_STATUS, CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
+  CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
 } = require('../utils/errors');
 
 module.exports.createCard = (req, res) => {
@@ -20,7 +20,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.getCardData = (req, res) => {
   Card.find({})
-    .then((card) => res.status(OK_STATUS).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка при получении данных карточки' }));
 };
 
@@ -30,7 +30,7 @@ module.exports.deleteCardById = (req, res) => {
       if (!card) {
         return res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
-      return res.status(OK_STATUS).send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -50,7 +50,7 @@ module.exports.likeCard = (req, res) => {
       if (!card) {
         return res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
-      return res.status(OK_STATUS).send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -70,7 +70,7 @@ module.exports.dislikeCard = (req, res) => {
       if (!card) {
         return res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
-      return res.status(OK_STATUS).send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

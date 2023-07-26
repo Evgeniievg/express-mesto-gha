@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const {
-  OK_STATUS, CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
+  CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
 } = require('../utils/errors');
 
 module.exports.createUser = (req, res) => {
@@ -17,7 +17,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getUserData = (req, res) => {
   User.find({})
-    .then((user) => res.status(OK_STATUS).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при получении данных пользователя' }));
 };
 
@@ -29,7 +29,7 @@ module.exports.getUserDataId = (req, res) => {
           .status(NOT_FOUND)
           .send({ message: 'Пользователя с таким Id не существует' });
       }
-      return res.status(OK_STATUS).send({ data: user });
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -46,7 +46,7 @@ module.exports.updateUser = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
-      return res.status(OK_STATUS).send({ data: user });
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -63,7 +63,7 @@ module.exports.updateAvatar = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
-      return res.status(OK_STATUS).send({ data: user });
+      return res.send({ data: user });
     })
     .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении аватара' }));
 };
