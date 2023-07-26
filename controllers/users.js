@@ -24,7 +24,13 @@ module.exports.getUserData = (req, res) => {
 module.exports.getUserDataId = (req, res) => {
   User.findById(req.params.userId)
     .then(user => res.send({ data: user }))
-    .catch(err => res.status(SERVER_ERROR).send({ message: `Произошла ошибка при получении данных пользователя по id: ${err}` }));
+    .catch((err) => {
+      if(err.name === 'CastError') {
+        return res.status(BAD_REQUEST).send({ message: 'Ошибка при поиске пользователя'});
+      } else {
+        return res.status(SERVER_ERROR).send({ message: `Произошла ошибка на сервере: ${err}`})
+      }
+    })
 }
 
 module.exports.updateUser = (req, res) => {
