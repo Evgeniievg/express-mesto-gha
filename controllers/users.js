@@ -23,7 +23,14 @@ module.exports.getUserData = (req, res) => {
 
 module.exports.getUserDataId = (req, res) => {
   User.findById(req.params.userId)
-    .then(user => res.send({ data: user }))
+    .then((user) =>  {
+      if(!user) {
+        return res
+        .status(NOT_FOUND)
+        .send({ message: 'Пользователя с таким Id не существует'});
+      }
+       return  res.status(OK_STATUS).send({ data: user })
+    })
     .catch((err) => {
       if(err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({ message: 'Ошибка при поиске пользователя'});
