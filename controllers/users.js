@@ -1,4 +1,3 @@
-const { error } = require('console');
 const User = require('../models/user');
 const {
   OK_STATUS, CREATED_STATUS, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
@@ -47,14 +46,13 @@ module.exports.updateUser = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
-      res.status(OK_STATUS).send({ data: user });
+      return res.status(OK_STATUS).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя' });
       }
-
-      res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении данных пользователя' });
+      return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении данных пользователя' });
     });
 };
 
@@ -65,7 +63,7 @@ module.exports.updateAvatar = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
-      res.status(OK_STATUS).send({ data: user });
+      return res.status(OK_STATUS).send({ data: user });
     })
-    .catch((err) => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении аватара' }));
+    .catch(res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении аватара' }));
 };
