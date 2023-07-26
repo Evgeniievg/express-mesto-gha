@@ -49,7 +49,14 @@ module.exports.updateUser = (req, res) => {
     }
     res.status(OK_STATUS).send({ data: user });
   })
-  .catch(err => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении данных пользователя' }));
+  .catch((err) => {
+    if(err.name === 'ValidationError') {
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя'});
+    }
+    else {
+      res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при обновлении данных пользователя' });
+    }
+  })
 }
 
 module.exports.updateAvatar = (req, res) => {
