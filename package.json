@@ -9,7 +9,7 @@
     "lint": "npx eslint .",
     "fix": "npx eslint . --fix"
   },
-  "author": "",
+  "author": "Evgenii Litvinov",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.44.0",
