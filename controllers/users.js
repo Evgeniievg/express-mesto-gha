@@ -11,14 +11,14 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации пользователя' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Произошла ошибка на сервере: ${err}` });
+      return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
 module.exports.getUserData = (req, res) => {
   User.find({})
     .then((user) => res.status(OK_STATUS).send({ data: user }))
-    .catch((err) => res.status(SERVER_ERROR).send({ message: `Произошла ошибка при получении данных пользователя: ${err}` }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка при получении данных пользователя' }));
 };
 
 module.exports.getUserDataId = (req, res) => {
@@ -35,7 +35,7 @@ module.exports.getUserDataId = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({ message: 'Ошибка при поиске пользователя' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Произошла ошибка на сервере: ${err}` });
+      return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 

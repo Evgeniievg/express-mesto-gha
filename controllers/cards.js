@@ -14,14 +14,14 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации карточки' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Ошибка на сервере: ${err}` });
+      return res.status(SERVER_ERROR).send({ message: 'Ошибка на сервере' });
     });
 };
 
 module.exports.getCardData = (req, res) => {
   Card.find({})
     .then((card) => res.status(OK_STATUS).send({ data: card }))
-    .catch((err) => res.status(SERVER_ERROR).send({ message: `На сервере произошла ошибка при получении данных карточки: ${err}` }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка при получении данных карточки' }));
 };
 
 module.exports.deleteCardById = (req, res) => {
@@ -36,7 +36,7 @@ module.exports.deleteCardById = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Ошибка удалении карточки: ${err.message}` });
+      return res.status(SERVER_ERROR).send({ message: 'Ошибка удалении карточки' });
     });
 };
 
@@ -56,7 +56,7 @@ module.exports.likeCard = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Ошибка при добавлении лайка: ${err.message}` });
+      return res.status(SERVER_ERROR).send({ message: 'Ошибка при добавлении лайка' });
     });
 };
 
@@ -76,6 +76,6 @@ module.exports.dislikeCard = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
       }
-      return res.status(SERVER_ERROR).send({ message: `Ошибка при добавлении лайка: ${err.message}` });
+      return res.status(SERVER_ERROR).send({ message: 'Ошибка при добавлении лайка' });
     });
 };
