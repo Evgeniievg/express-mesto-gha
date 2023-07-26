@@ -12,6 +12,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,6 +24,10 @@ mongoose
   })
   .catch((error) => {
     console.error('Произошла ошибка при установлении связи с MongoDB:', error);
+  });
+
+  app.use('*', (req, res) => {
+    res.status(404).json({ message: 'Страница не найдена' });
   });
 
 app.use('/users', require('./routes/users'));
