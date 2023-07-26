@@ -8,7 +8,13 @@ module.exports.createCard = (req, res) => {
   }
   Card.create({name, link, owner: req.user._id})
   .then(card => res.status(CREATED_STATUS).send({data: card}))
-  .catch(err => res.status(SERVER_ERROR).send({ message: `Произошла ошибка при создании карточки: ${err}` }));
+  .catch((err) => {
+    if(err.name === 'ValidationError') {
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка валидации карточки'});
+    } else {
+      res.status(SERVER_ERROR).send({ message: `Ошибка на сервере: ${err}` });
+    }
+  })
 }
 
 module.exports.getCardData = (req, res) => {
