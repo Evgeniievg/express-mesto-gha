@@ -22,7 +22,7 @@ module.exports.getUserData = (req, res) => {
 }
 
 module.exports.getUserDataId = (req, res) => {
-  User.findById(req.params.id)
+  User.findById(req.params.userId)
     .then(user => res.send({ data: user }))
     .catch(err => res.status(SERVER_ERROR).send({ message: `Произошла ошибка при получении данных пользователя по id: ${err}` }));
 }
