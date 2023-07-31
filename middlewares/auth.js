@@ -10,7 +10,7 @@ module.exports.auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'super-strong-password');
   } catch (err) {
-    next(new AuthorizationError('Нет доступа'));
+    next(new AuthorizationError(err));
   }
   req.user = payload;
 

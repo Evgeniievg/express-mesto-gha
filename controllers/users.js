@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
@@ -9,10 +8,6 @@ const NotFoundError = require('../utils/not-found-error');
 const BadRequest = require('../utils/bad-request-error');
 const AuthorizationError = require('../utils/authorization-error');
 const ConflictError = require('../utils/conflict-error');
-
-const randomString = crypto
-  .randomBytes(16)
-  .toString('hex');
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -99,7 +94,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        randomString,
+        'super-strong-password',
         { expiresIn: '7d' },
       );
       res.cookie('jwt', token, {
