@@ -28,14 +28,22 @@ app.use('/cards', auth, require('./routes/cards'));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().min(2).max(30).required(),
+    email: Joi.string()
+      .min(2)
+      .max(30)
+      .required()
+      .email(),
     password: Joi.string().min(2).max(30).required(),
   }),
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().min(2).max(30).required(),
+    email: Joi.string()
+      .min(2)
+      .max(30)
+      .email()
+      .required(),
     password: Joi.string().min(2).max(30).required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
