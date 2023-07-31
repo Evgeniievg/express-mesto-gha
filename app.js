@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookies = require('cookie-parser');
+const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 
@@ -25,8 +26,19 @@ mongoose
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().min(2).max(30).required(),
+    password: Joi.string().min(2).max(30).required(),
+  }),
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().min(2).max(30).required(),
+    password: Joi.string().min(2).max(30).required(),
+  }),
+}), createUser);
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страница не найдена' });
