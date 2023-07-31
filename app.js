@@ -5,11 +5,11 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookies = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
 const { signinValidation } = require('./middlewares/signinValidation');
+const { signupValidation } = require('./middlewares/signupValidation');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -41,19 +41,7 @@ app.use('/cards', auth, require('./routes/cards'));
 
 app.post('/signin', signinValidation, login);
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string()
-      .min(2)
-      .max(30)
-      .email()
-      .required(),
-    password: Joi.string().min(2).max(30).required(),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
-  }),
-}), createUser);
+app.post('/signup', signupValidation, createUser);
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страница не найдена' });
