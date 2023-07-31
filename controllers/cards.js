@@ -8,9 +8,6 @@ const ForbiddenError = require('../utils/forbidden-error');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
-  if (!name || !link) {
-    next(new BadRequest('"Name" и "link" - обязательные поля'));
-  }
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(CREATED_STATUS).send({ data: card }))
     .catch((err) => {
@@ -36,7 +33,7 @@ module.exports.deleteCardById = (req, res, next) => {
       if (req.user._id.toString() !== card.owner.toString()) {
         next(new ForbiddenError('Нет прав на удаление карточки'));
       }
-      return Card.findByIdAndRemove(req.params.cardId)
+      return Card.deleteOne(card)
         .then((removedCard) => res.send({ data: removedCard }))
         .catch(next);
     })
