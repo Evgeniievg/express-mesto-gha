@@ -9,6 +9,7 @@ const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
+const signinValidation = require('./middlewares/signinValidation');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -38,16 +39,7 @@ mongoose
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string()
-      .min(2)
-      .max(30)
-      .required()
-      .email(),
-    password: Joi.string().min(2).max(30).required(),
-  }),
-}), login);
+app.post('/signin', signinValidation, login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
