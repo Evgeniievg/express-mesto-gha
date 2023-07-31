@@ -23,7 +23,13 @@ module.exports.createUser = (req, res, next) => {
       email: req.body.email,
       password: hash,
     }))
-    .then((user) => res.status(CREATED_STATUS).send({ data: user }))
+    .then((user) => res.status(CREATED_STATUS).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+      email: user.email,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Ошибка валидации пользователя'));
