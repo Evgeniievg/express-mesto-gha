@@ -9,7 +9,7 @@ const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
-const signinValidation = require('./middlewares/signinValidation');
+const { signinValidation } = require('./middlewares/signinValidation');
 
 const { PORT = 3000 } = process.env;
 const app = express();
