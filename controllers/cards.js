@@ -4,6 +4,7 @@ const {
 } = require('../utils/errors');
 const NotFoundError = require('../utils/not-found-error');
 const BadRequest = require('../utils/bad-request-error');
+const ForbiddenError = require('../utils/forbidden-error');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -34,7 +35,7 @@ module.exports.deleteCardById = (req, res, next) => {
       }
 
       if (req.user._id.toString() !== card.owner.toString()) {
-        next(new NotFoundError('Нет прав на удаление карточки'));
+        next(new ForbiddenError('Нет прав на удаление карточки'));
       }
       return Card.findByIdAndRemove(req.params.cardId)
         .then((removedCard) => res.send({ data: removedCard }))
@@ -76,14 +77,17 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        next(new BadRequest('Карточка не найдена'));
+        throw new NotFoundError('Карточка не найдена');
       }
-      return res.send({ data: card });
+      return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Карточка не найдена'));
+      } else if (err instanceof NotFoundError) {
+        next(err);
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
