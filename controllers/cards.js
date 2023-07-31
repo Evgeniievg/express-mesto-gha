@@ -13,6 +13,7 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Ошибка валидации карточки'));
+        return;
       }
       next(err);
     });
@@ -29,17 +30,20 @@ module.exports.deleteCardById = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
+        return;
       }
       if (req.user._id.toString() !== card.owner.toString()) {
         next(new ForbiddenError('Нет прав на удаление карточки'));
+        return;
       }
-      return Card.deleteOne(card)
+      Card.deleteOne(card)
         .then((removedCard) => res.send({ data: removedCard }))
         .catch(next);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Карточка не найдена'));
+        return;
       }
       next(err);
     });
@@ -54,12 +58,14 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
+        return;
       }
-      return res.send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Карточка не найдена'));
+        return;
       }
       next(err);
     });
@@ -80,10 +86,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Карточка не найдена'));
-      } else if (err instanceof NotFoundError) {
-        next(err);
-      } else {
-        next(err);
       }
+      next(err);
     });
 };
