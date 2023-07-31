@@ -10,6 +10,7 @@ const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
 const { signinValidation } = require('./middlewares/signinValidation');
 const { signupValidation } = require('./middlewares/signupValidation');
+const NotFoundError = require('./utils/not-found-error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -28,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mydb', { useNewUrlParser: true })
+  .connect('mongodb://127.0.0.1:27017/mestodb', { useNewUrlParser: true })
   .then(() => {
     console.log('Успешно установлена связь с MongoDB');
   })
@@ -43,8 +44,8 @@ app.post('/signin', signinValidation, login);
 
 app.post('/signup', signupValidation, createUser);
 
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Страница не найдена' });
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 app.use(errors());
