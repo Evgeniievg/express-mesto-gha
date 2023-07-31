@@ -2,15 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const cookies = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
+const errorHandler = require('./middlewares/error-handler');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(helmet());
 app.use(cookies());
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -57,17 +69,7 @@ app.use('*', (req, res) => {
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Application is running on PORT ${PORT}`);
