@@ -1,23 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const cookies = require('cookie-parser');
+const { login, createUser } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64bf7c86ad0bd3af3ea84a4f',
-  };
-
-  next();
-});
-
+app.use(cookies());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mestodb', { useNewUrlParser: true })
+  .connect('mongodb://127.0.0.1:27017/mydb', { useNewUrlParser: true })
   .then(() => {
     console.log('Успешно установлена связь с MongoDB');
   })
@@ -25,11 +22,27 @@ mongoose
     console.error('Произошла ошибка при установлении связи с MongoDB:', error);
   });
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Страница не найдена' });
+});
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
 });
 
 app.listen(PORT, () => {
